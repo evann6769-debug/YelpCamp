@@ -1,9 +1,6 @@
-if (process.env.NODE_ENV === 'production') {
-  app.set('trust proxy', 1);
-  sessionConfig.cookie.secure = true;
-}
-
 const express = require("express");
+const app = express(); // ✅ app exists immediately
+
 const mongoose = require("mongoose");
 const path = require("path");
 const ejsMate = require("ejs-mate");
@@ -26,6 +23,8 @@ const userRoutes = require("./routes/users");
 const campgroundsRoutes = require("./routes/campgrounds");
 const reviewRoutes = require("./routes/reviews");
 
+const moment = require("moment");
+app.locals.moment = moment;
 
 const dbUrl = process.env.DB_URL || "mongodb://127.0.0.1:27017/yelp-camp";
 
@@ -38,18 +37,10 @@ db.once("open", () => {
   console.log("Database connected");
 });
 
-const app = express();
-
-const moment = require('moment');
-app.locals.moment = moment;
-
 // ===== VIEW ENGINE =====
 app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
-
-// If deploying behind a proxy (Render/Heroku), uncomment:
-// app.set("trust proxy", 1);
 
 // ===== MIDDLEWARE =====
 app.use(express.urlencoded({ extended: true }));
@@ -75,15 +66,19 @@ const sessionConfig = {
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    // secure: true, // enable AFTER deploy (https only)
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
     maxAge: 1000 * 60 * 60 * 24 * 7,
   },
 };
 
+// ✅ NOW it's safe to do production-only settings
+if (process.env.NODE_ENV === "production") {
+  app.set("trust proxy", 1);
+  sessionConfig.cookie.secure = true; // cookies only over https
+}
+
 app.use(session(sessionConfig));
 app.use(flash());
-
 // ===== HELMET + CSP =====
 app.use(helmet());
 
