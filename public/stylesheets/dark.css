@@ -1,0 +1,96 @@
+/* ===== Global dark theme (safe overrides) ===== */
+/* Only apply dark background if NOT home page */
+body:not(.home-page){
+  background: var(--bg) !important;
+  color: var(--text) !important;
+}
+
+:root{
+  --bg: #1f1f1f;
+  --surface: #2a2a2a;
+  --surface-2: #333333;
+  --border: #444;
+  --text: #f2f2f2;
+  --muted: #c9c9c9;
+}
+
+html, body{
+  background: var(--bg) !important;
+  color: var(--text) !important;
+}
+
+/* Most pages are inside main; give spacing without forcing a bootstrap container */
+
+
+/* Links */
+a{ color: #9ecbff; }
+a:hover{ color: #c3ddff; }
+
+/* Bootstrap surfaces */
+.card,
+.list-group-item,
+.modal-content,
+.dropdown-menu,
+.accordion-item{
+  background: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+.card-footer{
+  background: var(--surface-2) !important;
+  border-color: var(--border) !important;
+}
+
+.list-group-item{
+  border-color: var(--border) !important;
+}
+
+/* Forms */
+.form-control,
+.form-select,
+.form-control:focus,
+.form-select:focus{
+  background: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+  box-shadow: none !important;
+}
+
+.form-control::placeholder{
+  color: #a9a9a9 !important;
+}
+
+/* Buttons: keep bootstrap colors, just make secondary nicer */
+.btn-secondary{
+  background: #555 !important;
+  border-color: #666 !important;
+}
+
+/* Alerts look fine, just ensure text readable */
+.alert{
+  color: #111;
+}
+
+/* Navbar/footer if yours are light */
+.navbar, footer{
+  background: #181818 !important;
+  border-color: var(--border) !important;
+}
+.navbar .nav-link, .navbar-brand{
+  color: var(--text) !important;
+}
+
+/* Map container: give it a dark frame */
+#map{
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #111;
+}
+
+/* Carousel controls stay visible on dark */
+.carousel-control-prev-icon,
+.carousel-control-next-icon{
+  filter: invert(1);
+}
