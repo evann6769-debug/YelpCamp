@@ -8,8 +8,24 @@
     height: 300px;
 }
 
+.campground-img {
+  height: 400px;       /* change if you want taller/shorter */
+  object-fit: cover;   /* crops instead of stretching */
+}
+
 .alert:empty {
   display: none !important;
+}
+
+.index-img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+}
+
+.card .row {
+  align-items: center;
 }
 
 .footer-small{
@@ -20,3 +36,4 @@
 footer {
   line-height: 1.2;
 }
+

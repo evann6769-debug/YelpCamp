@@ -1,6 +1,10 @@
 const express = require("express");
 const app = express(); // ✅ app exists immediately
 
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+
 const mongoose = require("mongoose");
 const path = require("path");
 const ejsMate = require("ejs-mate");
@@ -116,19 +120,21 @@ const fontSrcUrls = [];
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
-      defaultSrc: [],
+      defaultSrc: ["'self'"],
       connectSrc: ["'self'", ...connectSrcUrls],
       scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
       styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
       workerSrc: ["'self'", "blob:"],
       objectSrc: [],
-      imgSrc: [
-        "'self'",
-        "blob:",
-        "data:",
-        "https://res.cloudinary.com/",
-        "https://images.unsplash.com/",
-      ],
+   imgSrc: [
+  "'self'",
+  "blob:",
+  "data:",
+  "https://res.cloudinary.com",
+  "https://images.unsplash.com",
+  "https://plus.unsplash.com",
+  "https://source.unsplash.com",
+],
       fontSrc: ["'self'", ...fontSrcUrls],
     },
   })

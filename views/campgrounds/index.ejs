@@ -3,48 +3,72 @@
 <div id="cluster-map"></div>
 
 <div class="container">
-    <h1>All Campgrounds</h1>
+  <h1 class="mb-4">All Campgrounds</h1>
 
-    <% for (let campground of campgrounds) { %>
-        <div class="card mb-3">
-            <div class="row">
-                <div class="col-md-4">
-                    <% if (campground.images.length) { %>
-                        <img class="img-fluid" alt="" src="<%= campground.images[0].url %>">
-                    <% } else { %>
-                        <img class="img-fluid" alt=""
-                            src="https://res.cloudinary.com/douqbebwk/image/upload/v1600103881/YelpCamp/lz8jjv2gyynjil7lswf4.png">
-                    <% } %>
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <%= campground.title %>
-                        </h5>
+  <% for (let campground of campgrounds) { %>
 
-                        <p class="card-text">
-                            <%= campground.description %>
-                        </p>
+    <div class="card mb-4 shadow-sm">
+      <div class="row g-0 align-items-stretch">
 
-                        <p class="card-text">
-                            <small class="light small mb-1">
-                                <%= campground.location %>
-                            </small>
-                        </p>
+        <!-- IMAGE COLUMN -->
+        <div class="col-md-4 d-flex">
+          <% 
+            let imgUrl = null;
 
-                        <a class="btn btn-primary" href="/campgrounds/<%= campground._id %>">
-                            View <%= campground.title %>
-                        </a>
-                    </div>
-                </div>
-            </div>
+            if (
+              campground.images &&
+              campground.images.length > 0 &&
+              campground.images[0] &&
+              campground.images[0].url
+            ) {
+              imgUrl = campground.images[0].url;
+            }
+          %>
+
+      <img class="index-img campground-thumb"
+     alt="<%= campground.title %>"
+     src="<%= imgUrl || '/images/no-image.png' %>">
         </div>
-    <% } %>
+
+        <!-- TEXT COLUMN -->
+        <div class="col-md-8">
+          <div class="card-body h-100 d-flex flex-column">
+
+            <h5 class="card-title mb-2">
+              <%= campground.title %>
+            </h5>
+
+            <p class="card-text text-muted mb-2">
+              <%= campground.description %>
+            </p>
+
+            <p class="card-text">
+              <small class="text-secondary">
+                <%= campground.location %>
+              </small>
+            </p>
+
+            <div class="mt-auto">
+              <a class="btn btn-primary"
+                 href="/campgrounds/<%= campground._id %>">
+                View Campground
+              </a>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  <% } %>
 </div>
 
 <script>
-    window.mapToken = "<%= process.env.MAPBOX_TOKEN %>";
-    window.campgrounds = <%- JSON.stringify(campgrounds) %>;
+  window.mapToken = "<%= process.env.MAPBOX_TOKEN %>";
+  window.campgrounds = <%- JSON.stringify(campgrounds) %>;
 </script>
+
+<script src="/javascripts/imgFallback.js"></script>
 
 <script src="/javascripts/clusterMap.js"></script>

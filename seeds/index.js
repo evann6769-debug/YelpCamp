@@ -6,6 +6,7 @@ const Campground = require('../models/campground');
 const User = require('../models/user');
 
 const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/yelp-camp';
+
 mongoose.connect(dbUrl);
 
 const db = mongoose.connection;
@@ -15,16 +16,42 @@ db.once('open', () => console.log('Database connected'));
 const sample = (array) => array[Math.floor(Math.random() * array.length)];
 
 const imagePool = [
-  { url: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1200&q=60', filename: 'unsplash/camp1' },
-  { url: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1200&q=60', filename: 'unsplash/camp2' },
-  { url: 'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1200&q=60', filename: 'unsplash/camp3' },
-  { url: 'https://images.unsplash.com/photo-1499696010180-025ef6e1a8f9?auto=format&fit=crop&w=1200&q=60', filename: 'unsplash/camp4' },
-  { url: 'https://images.unsplash.com/photo-1500043357865-c6b8827edf7e?auto=format&fit=crop&w=1200&q=60', filename: 'unsplash/camp5' },
-  { url: 'https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=1200&q=60', filename: 'unsplash/camp6' },
-  { url: 'https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?auto=format&fit=crop&w=1200&q=60', filename: 'unsplash/camp7' },
-  { url: 'https://images.unsplash.com/photo-1501706362039-c6e80948b54c?auto=format&fit=crop&w=1200&q=60', filename: 'unsplash/camp8' },
-  { url: 'https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?auto=format&fit=crop&w=1200&q=60', filename: 'unsplash/camp9' },
-  { url: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=60', filename: 'unsplash/camp10' },
+  {
+    url: "https://res.cloudinary.com/dlzj4cmhn/image/upload/v1772216329/download_klymwe.jpg",
+    filename: "YelpCamp/photo1"
+  },
+  {
+    url: "https://res.cloudinary.com/dlzj4cmhn/image/upload/v1772216341/download_1_pgzlcx.jpg",
+    filename: "YelpCamp/photo2"
+  },
+  {
+    url: "https://res.cloudinary.com/dlzj4cmhn/image/upload/v1772216347/download_3_jeaq3m.jpg",
+    filename: "YelpCamp/photo3"
+  },
+    {
+    url: "https://res.cloudinary.com/dlzj4cmhn/image/upload/v1772216351/download_5_ypozuy.jpg",
+    filename: "YelpCamp/photo4"
+  },
+  {
+    url: "https://res.cloudinary.com/dlzj4cmhn/image/upload/v1772216356/download_7_dcrtkn.jpg",
+    filename: "YelpCamp/photo5"
+  },
+  {
+    url: "https://res.cloudinary.com/dlzj4cmhn/image/upload/v1772216359/download_8_ynzjeq.jpg",
+    filename: "YelpCamp/photo6"
+  },
+    {
+    url: "https://res.cloudinary.com/dlzj4cmhn/image/upload/v1772216364/download_9_ara1id.jpg",
+    filename: "YelpCamp/photo7"
+  },
+  {
+    url: "https://res.cloudinary.com/dlzj4cmhn/image/upload/v1772216372/way_up_in_the_mountains_ctdocl.jpg",
+    filename: "YelpCamp/photo8"
+  },
+  {
+    url: "https://res.cloudinary.com/dlzj4cmhn/image/upload/v1772216376/download_10_q6mlpc.jpg",
+    filename: "YelpCamp/photo9"
+  }
 ];
 
 const pickRandomImages = (pool, count) => {
@@ -32,7 +59,7 @@ const pickRandomImages = (pool, count) => {
   while (chosen.size < count) {
     chosen.add(pool[Math.floor(Math.random() * pool.length)]);
   }
-  return [...chosen];
+  return Array.from(chosen);
 };
 
 const seedDB = async () => {
@@ -40,41 +67,48 @@ const seedDB = async () => {
   await Campground.deleteMany({});
   console.log('Old campgrounds deleted');
 
-  const user = await User.findOne({});
-  if (!user) throw new Error('No users found. Register a user first, then reseed.');
+  // 🔥 Ensure Evan exists
+  let evan = await User.findOne({ username: 'Evan' });
 
-  for (let i = 0; i < 300; i++) {
-    if (i % 25 === 0) console.log('seed progress:', i);
-
-    const randomCityIndex = Math.floor(Math.random() * cities.length);
-    const price = Math.floor(Math.random() * 20) + 10;
-
-    const rawImages = pickRandomImages(imagePool, Math.random() < 0.7 ? 2 : 3);
-
-    // ✅ cache-buster so images can't “all look the same” due to caching
-    const images = rawImages.map((img, idx) => ({
-      url: `${img.url}&sig=${i}-${idx}`,
-      filename: img.filename,
-    }));
-
-    const camp = new Campground({
-      author: user._id,
-      location: `${cities[randomCityIndex].city}, ${cities[randomCityIndex].state}`,
-      title: `${sample(descriptors)} ${sample(places)}`,
-      description:
-        'A beautiful campground with stunning views, peaceful surroundings, and great access to hiking trails.',
-      price,
-      geometry: {
-        type: 'Point',
-        coordinates: [cities[randomCityIndex].longitude, cities[randomCityIndex].latitude],
-      },
-      images,
-    });
-
-    await camp.save();
+  if (!evan) {
+    console.log('Creating Evan user...');
+    evan = new User({ username: 'Evan', email: 'evan@test.com' });
+    await User.register(evan, 'password123'); // change password if you want
+    console.log('Evan created');
+  } else {
+    console.log('Evan already exists');
   }
 
-  console.log('Seeding finished! 300 campgrounds created.');
+  for (let i = 0; i < 300; i++) {
+  if (i % 25 === 0) console.log('Seeding progress:', i);
+
+  const randomCityIndex = Math.floor(Math.random() * cities.length);
+  const price = Math.floor(Math.random() * 20) + 10;
+
+  // ✅ Use Cloudinary pool
+  const images = pickRandomImages(imagePool, Math.random() < 0.7 ? 2 : 3);
+
+  const camp = new Campground({
+    author: evan._id,
+    location: `${cities[randomCityIndex].city}, ${cities[randomCityIndex].state}`,
+    title: `${sample(descriptors)} ${sample(places)}`,
+    description:
+      'A beautiful campground with stunning views, peaceful surroundings, and great access to hiking trails.',
+    price,
+    geometry: {
+      type: 'Point',
+      coordinates: [
+        cities[randomCityIndex].longitude,
+        cities[randomCityIndex].latitude
+      ]
+    },
+    images
+  });
+
+  await camp.save();
+}
+
+  console.log('Seeding complete: 300 campgrounds created');
 };
 
 seedDB()
