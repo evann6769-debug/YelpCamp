@@ -3,21 +3,17 @@ const mongoose = require('mongoose');
 const cities = require('./cities');
 const { places, descriptors } = require('./seedHelpers');
 const Campground = require('../models/campground');
+const User = require('../models/user');
 
 const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/yelp-camp';
-
 mongoose.connect(dbUrl);
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', () => {
-  console.log('Database connected');
-});
+db.once('open', () => console.log('Database connected'));
 
 const sample = (array) => array[Math.floor(Math.random() * array.length)];
 
-
-// 🔥 Image Pool (add as many as you want)
 const imagePool = [
   { url: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1200&q=60', filename: 'unsplash/camp1' },
   { url: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1200&q=60', filename: 'unsplash/camp2' },
@@ -28,39 +24,41 @@ const imagePool = [
   { url: 'https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?auto=format&fit=crop&w=1200&q=60', filename: 'unsplash/camp7' },
   { url: 'https://images.unsplash.com/photo-1501706362039-c6e80948b54c?auto=format&fit=crop&w=1200&q=60', filename: 'unsplash/camp8' },
   { url: 'https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?auto=format&fit=crop&w=1200&q=60', filename: 'unsplash/camp9' },
-  { url: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=60', filename: 'unsplash/camp10' }
+  { url: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=60', filename: 'unsplash/camp10' },
 ];
 
-
-// ✅ Guaranteed unique random image picker
 const pickRandomImages = (pool, count) => {
   const chosen = new Set();
-
   while (chosen.size < count) {
-    const randomImage = pool[Math.floor(Math.random() * pool.length)];
-    chosen.add(randomImage);
+    chosen.add(pool[Math.floor(Math.random() * pool.length)]);
   }
-
-  return Array.from(chosen);
+  return [...chosen];
 };
 
-
 const seedDB = async () => {
+  console.log('Seeding started...');
   await Campground.deleteMany({});
   console.log('Old campgrounds deleted');
 
+  const user = await User.findOne({});
+  if (!user) throw new Error('No users found. Register a user first, then reseed.');
+
   for (let i = 0; i < 300; i++) {
+    if (i % 25 === 0) console.log('seed progress:', i);
 
     const randomCityIndex = Math.floor(Math.random() * cities.length);
     const price = Math.floor(Math.random() * 20) + 10;
 
-    const images = pickRandomImages(
-      imagePool,
-      Math.random() < 0.7 ? 2 : 3
-    );
+    const rawImages = pickRandomImages(imagePool, Math.random() < 0.7 ? 2 : 3);
+
+    // ✅ cache-buster so images can't “all look the same” due to caching
+    const images = rawImages.map((img, idx) => ({
+      url: `${img.url}&sig=${i}-${idx}`,
+      filename: img.filename,
+    }));
 
     const camp = new Campground({
-      author: process.env.SEED_USER_ID, // 🔥 Put this in your .env file
+      author: user._id,
       location: `${cities[randomCityIndex].city}, ${cities[randomCityIndex].state}`,
       title: `${sample(descriptors)} ${sample(places)}`,
       description:
@@ -68,20 +66,16 @@ const seedDB = async () => {
       price,
       geometry: {
         type: 'Point',
-        coordinates: [
-          cities[randomCityIndex].longitude,
-          cities[randomCityIndex].latitude
-        ]
+        coordinates: [cities[randomCityIndex].longitude, cities[randomCityIndex].latitude],
       },
-      images
+      images,
     });
 
     await camp.save();
   }
 
-  console.log('300 campgrounds seeded!');
+  console.log('Seeding finished! 300 campgrounds created.');
 };
-
 
 seedDB()
   .then(() => mongoose.connection.close())
