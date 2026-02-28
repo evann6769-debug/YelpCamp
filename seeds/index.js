@@ -51,6 +51,78 @@ const imagePool = [
   {
     url: "https://res.cloudinary.com/dlzj4cmhn/image/upload/v1772216376/download_10_q6mlpc.jpg",
     filename: "YelpCamp/photo9"
+  },
+   {
+    url: "https://res.cloudinary.com/dlzj4cmhn/image/upload/v1772303121/istockphoto-2218734127-612x612_u2h41i.webp",
+    filename: "YelpCamp/photo10"
+  },
+  {
+    url: "https://res.cloudinary.com/dlzj4cmhn/image/upload/v1772303125/photo-1444124818704-4d89a495bbae_bkh4w8.avif",
+    filename: "YelpCamp/photo11"
+  },
+  {
+    url: "https://res.cloudinary.com/dlzj4cmhn/image/upload/v1772303130/photo-1470246973918-29a93221c455_xr3tx1.avif",
+    filename: "YelpCamp/photo12"
+  },
+  {
+    url: "https://res.cloudinary.com/dlzj4cmhn/image/upload/v1772303134/photo-1517824806704-9040b037703b_gckzzi.avif",
+    filename: "YelpCamp/photo13"
+  },
+  {
+    url: "https://res.cloudinary.com/dlzj4cmhn/image/upload/v1772303152/photo-1537565266759-34bbc16be345_qzp74j.avif",
+    filename: "YelpCamp/photo14"
+  },
+  {
+    url: "https://res.cloudinary.com/dlzj4cmhn/image/upload/v1772303157/photo-1534880606858-29b0e8a24e8d_lez4po.avif",
+    filename: "YelpCamp/photo15"
+  },
+  {
+    url: "https://res.cloudinary.com/dlzj4cmhn/image/upload/v1772303160/photo-1565257074896-83694ab78bb6_m5y15x.avif",
+    filename: "YelpCamp/photo16"
+  },
+  {
+    url: "https://res.cloudinary.com/dlzj4cmhn/image/upload/v1772303163/photo-1571687949921-1306bfb24b72_lvtanv.avif",
+    filename: "YelpCamp/photo17"
+  },
+  {
+    url: "https://res.cloudinary.com/dlzj4cmhn/image/upload/v1772303166/photo-1578645510447-e20b4311e3ce_sst4iy.avif",
+    filename: "YelpCamp/photo18"
+  },
+  {
+    url: "https://res.cloudinary.com/dlzj4cmhn/image/upload/v1772303169/photo-1602391833977-358a52198938_ykfddl.avif",
+    filename: "YelpCamp/photo19"
+  },
+  {
+    url: "https://res.cloudinary.com/dlzj4cmhn/image/upload/v1772303171/photo-1660819731358-e197f235eeb7_sztiqo.avif",
+    filename: "YelpCamp/photo20"
+  },
+  {
+    url: "https://res.cloudinary.com/dlzj4cmhn/image/upload/v1772303348/photo-1526491109672-74740652b963_vnk95s.avif",
+    filename: "YelpCamp/photo21"
+  },
+  {
+    url: "https://res.cloudinary.com/dlzj4cmhn/image/upload/v1772303350/photo-1624923686627-514dd5e57bae_ytcbsd.avif",
+    filename: "YelpCamp/photo22"
+  },
+  {
+    url: "https://res.cloudinary.com/dlzj4cmhn/image/upload/v1772303352/photo-1595923112485-5e7c738fa67b_se5jpj.avif",
+    filename: "YelpCamp/photo23"
+  },
+  {
+    url: "https://res.cloudinary.com/dlzj4cmhn/image/upload/v1772303356/photo-1580842693665-cdae6f59814f_jkrxwy.avif",
+    filename: "YelpCamp/photo24"
+  },
+  {
+    url: "https://res.cloudinary.com/dlzj4cmhn/image/upload/v1772303358/photo-1507777767380-68bdac55c642_hwiqed.avif",
+    filename: "YelpCamp/photo25"
+  },
+  {
+    url: "https://res.cloudinary.com/dlzj4cmhn/image/upload/v1772303358/photo-1507777767380-68bdac55c642_hwiqed.avif",
+    filename: "YelpCamp/photo26"
+  },
+  {
+    url: "https://res.cloudinary.com/dlzj4cmhn/image/upload/v1772303360/photo-1476041800959-2f6bb412c8ce_ce9z2w.avif",
+    filename: "YelpCamp/photo27"
   }
 ];
 
